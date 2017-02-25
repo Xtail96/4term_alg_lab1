@@ -33,64 +33,62 @@ void mergeSortIterative(int *arr, int *buf, int size, bool output)
     }
     */
     // разбиение для естественного слияния
-    int leftFirst = -1;
-    int rightFirst = -1;
-    int rightSecond = -1;
-
-
-    while(rightFirst != size-1 && rightSecond != size-1)
+    std::vector< std::pair<int, int> > edges;
+    edges.reserve(size);
+    int leftEdge = 0;
+    for(int i = 1; i < size; i++)
     {
-        leftFirst = 0;
-        //rightFirst = -1;
-        //rightSecond = -1;
-        for(int i = 0; i < size-1; i++)
+        if(arr[i-1]>arr[i])
         {
-            if(rightFirst != -1 && rightSecond != -1)
+            edges.push_back(std::make_pair(leftEdge, i-1));
+            leftEdge = i;
+        }
+    }
+    edges.push_back(std::make_pair(leftEdge, size-1));
+
+    for(int subSize = 1; subSize < edges.size(); subSize*=2)
+    {
+
+
+
+        for(int leftEdge = 0; leftEdge < edges.size(); leftEdge+=2*subSize)
+        {
+
+            int middleEdge= std::min(leftEdge + subSize - 1, (int)edges.size() - 1);
+            int rightEdge = std::min(leftEdge + 2 * subSize - 1, (int)edges.size() - 1);
+
+            int left = edges[leftEdge].first;
+            int middle = edges[middleEdge].second;
+            int right = edges[rightEdge].second;
+
+            if(output)
             {
+                std::cout<<"["<<left<<" "<<middle<<"] ["<<middle+1<<" "<<right<<"]"<<std::endl;
                 std::cout<<"Array1: ";
-                printArray(arr, leftFirst, rightFirst);
+                printArray(arr, left, middle);
                 std::cout<<std::endl;
                 std::cout<<"Array2: ";
-                printArray(arr, rightFirst+1, rightSecond);
-
-                merge(arr, buf, leftFirst, rightFirst, rightSecond);
-
+                printArray(arr, middle+1, right);
                 std::cout<<std::endl;
+            }
+
+
+            merge(arr, buf, left, middle, right);
+            if(output)
+            {
                 std::cout<<"Result: ";
-                printArray(arr, leftFirst, rightSecond);
+                printArray(arr, left, right);
                 std::cout<<std::endl;
+            }
+
+
+            merge(arr, buf, left, middle, right);
+
+            if(output)
+            {
                 std::cout<<"Origin: ";
                 printArray(arr, 0, size-1);
-                std::cout<<std::endl;
-                std::cout<<std::endl;
-
-
-                leftFirst = rightSecond+1;
-                rightFirst = -1;
-                rightSecond = -1;
-            }
-
-            if(arr[i]>arr[i+1])
-            {
-                if(rightFirst == -1)
-                {
-                    rightFirst = i;
-                    std::cout<<leftFirst<<" "<<rightFirst<<std::endl;
-                }
-                else
-                {
-                    rightSecond = i;
-                    std::cout<<rightFirst+1<<" "<<rightSecond<<std::endl<<std::endl;
-                }
-            }
-            else
-            {
-
-                if(i == size-2 && rightFirst != -1)
-                {
-                    rightSecond = i+1;
-                    std::cout<<rightFirst+1<<" "<<rightSecond<<std::endl<<std::endl;
-                }
+                std::cout<<std::endl<<std::endl;
             }
 
         }

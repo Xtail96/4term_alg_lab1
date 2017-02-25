@@ -1,5 +1,6 @@
 #ifndef NATURAL_MERGE_SORT_H
 #define NATURAL_MERGE_SORT_H
+#include <vector>
 
 // максимальная глубина рекурсивного вызова
 const int RECURSION_LIMIT = 1024;

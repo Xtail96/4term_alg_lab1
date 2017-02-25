@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 #include "natural_merge_sort.h"
 //#include "timeresearch.h"
@@ -18,6 +19,8 @@ int main()
     //researchTime(200000000);
 
     system("clear");
+
+    system("cd");
     // исходный массив, отсортированная копия массива, буфер
     int *arr, *arr_sorted, *buf;
     // число элементов
