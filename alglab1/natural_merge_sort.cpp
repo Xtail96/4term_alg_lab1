@@ -48,47 +48,47 @@ void mergeSortIterative(int *arr, int *buf, int size, bool output)
 
     for(int subSize = 1; subSize < edges.size(); subSize*=2)
     {
-
-
-
-        for(int leftEdge = 0; leftEdge < edges.size(); leftEdge+=2*subSize)
+        for(int leftEdge = 0; leftEdge < edges.size()-1; leftEdge+=2*subSize)
         {
 
             int middleEdge= std::min(leftEdge + subSize - 1, (int)edges.size() - 1);
             int rightEdge = std::min(leftEdge + 2 * subSize - 1, (int)edges.size() - 1);
 
-            int left = edges[leftEdge].first;
-            int middle = edges[middleEdge].second;
-            int right = edges[rightEdge].second;
-
-            if(output)
+            if(middleEdge<rightEdge)
             {
-                std::cout<<"["<<left<<" "<<middle<<"] ["<<middle+1<<" "<<right<<"]"<<std::endl;
-                std::cout<<"Array1: ";
-                printArray(arr, left, middle);
-                std::cout<<std::endl;
-                std::cout<<"Array2: ";
-                printArray(arr, middle+1, right);
-                std::cout<<std::endl;
-            }
+
+                int left = edges[leftEdge].first;
+                int middle = edges[middleEdge].second;
+                int right = edges[rightEdge].second;
+
+                if(output)
+                {
+                    std::cout<<"["<<left<<" "<<middle<<"] ["<<middle+1<<" "<<right<<"]"<<std::endl;
+                    std::cout<<"Array1: ";
+                    printArray(arr, left, middle);
+                    std::cout<<std::endl;
+                    std::cout<<"Array2: ";
+                    printArray(arr, middle+1, right);
+                    std::cout<<std::endl;
+                }
 
 
-            merge(arr, buf, left, middle, right);
-            if(output)
-            {
-                std::cout<<"Result: ";
-                printArray(arr, left, right);
-                std::cout<<std::endl;
-            }
+                merge(arr, buf, left, middle, right);
+                if(output)
+                {
+                    std::cout<<"Result: ";
+                    printArray(arr, left, right);
+                    std::cout<<std::endl;
+                }
 
 
-            merge(arr, buf, left, middle, right);
 
-            if(output)
-            {
-                std::cout<<"Origin: ";
-                printArray(arr, 0, size-1);
-                std::cout<<std::endl<<std::endl;
+                if(output)
+                {
+                    std::cout<<"Origin: ";
+                    printArray(arr, 0, size-1);
+                    std::cout<<std::endl<<std::endl;
+                }
             }
 
         }
@@ -99,33 +99,36 @@ void mergeSortIterative(int *arr, int *buf, int size, bool output)
 
 void merge(int *arr, int *buf, int left, int middle, int right)
 {
-    // текущая позиция чтения из левой части массива
-    int l = left;
-    // текущая позиция чтения из правой части массива
-    int r = middle + 1;
-    // текущая позиция записи в буфер
-    int b = 0;
-
-    // слияние, пока есть хотя бы 1 элемент в каждой части массива
-    while ((l <= middle) && (r <= right))
+    if((left<=middle) && (middle<right))
     {
-        // записываем в буфер меньший элемент из левой и правой частей
-        if (arr[l] < arr[r])
+        // текущая позиция чтения из левой части массива
+        int l = left;
+        // текущая позиция чтения из правой части массива
+        int r = middle + 1;
+        // текущая позиция записи в буфер
+        int b = 0;
+
+        // слияние, пока есть хотя бы 1 элемент в каждой части массива
+        while ((l <= middle) && (r <= right))
+        {
+            // записываем в буфер меньший элемент из левой и правой частей
+            if (arr[l] < arr[r])
+                buf[b++] = arr[l++];
+            else
+                buf[b++] = arr[r++];
+        }
+
+        // одна из частей массива закончилась
+        // копируем остаток другой части в конец буфера
+        while (l <= middle) // левая часть
             buf[b++] = arr[l++];
-        else
+        while (r <= right) // правая часть
             buf[b++] = arr[r++];
+
+        // копируем буфер в исходный массив
+        for (int i = 0; i <= right - left; i++)
+            arr[left + i] = buf[i];
     }
-
-    // одна из частей массива закончилась
-    // копируем остаток другой части в конец буфера
-    while (l <= middle) // левая часть
-        buf[b++] = arr[l++];
-    while (r <= right) // правая часть
-        buf[b++] = arr[r++];
-
-    // копируем буфер в исходный массив
-    for (int i = 0; i <= right - left; i++)
-        arr[left + i] = buf[i];
 }
 
 
